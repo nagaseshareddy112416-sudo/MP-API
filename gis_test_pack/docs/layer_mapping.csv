@@ -1,0 +1,9 @@
+cad_layer,category,sub_type,geometry,color
+ROAD_CL,Road,Centerline,line,#000000
+ROAD_EDGE,Road,Edge of pavement,line,#555555
+CHAINAGE,Road,Chainage marker,point,#ff9800
+WATER_MAIN,Utility,Water,line,#1f77ff
+SEWER_LINE,Utility,Sewer,line,#8b4513
+STORM_DRAIN,Utility,Storm drain,line,#2ca02c
+POWER_CABLE,Utility,Power,line,#e63946
+BLDG_FOOTPRINT,Building,Footprint,polygon,#6c757d

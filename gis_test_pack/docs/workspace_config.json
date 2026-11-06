@@ -1,0 +1,9 @@
+{
+  "name": "Test Workspace (synthetic)",
+  "default_epsg": 32644,
+  "display_epsg": 4326,
+  "centre_lonlat": [80.516, 16.513],
+  "default_zoom": 14,
+  "clash_vertical_tolerance_m": 0.5,
+  "far_from_existing_data_warning_m": 5000
+}

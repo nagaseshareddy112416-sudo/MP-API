@@ -1,0 +1,24 @@
+## .NET build artifacts
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Application local settings & secrets
+appsettings.Development.json
+*.env
+.env
+
+## Storage & uploads
+uploads/
+storage/
+temp/
+logs/
+
+## Test DXFs generated (keep source scripts & csv)
+/gis_test_pack/gfc_dxf/
+/gis_test_pack/gfc_dxf_invalid/
+*.dwg
