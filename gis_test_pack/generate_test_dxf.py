@@ -79,3 +79,4 @@ m.add_lwpolyline([L(-100, 300), L(100, 300)], dxfattribs={"layer": "XYZ_UNKNOWN"
 doc.saveas(OUT + "gfc_dxf_invalid/INVALID_unmapped_layer.dxf")
 
 print("Test DXF files created.")
+

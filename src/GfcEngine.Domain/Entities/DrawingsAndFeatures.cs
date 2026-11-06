@@ -77,3 +77,4 @@ public class ExtractedFeature : WorkspaceScopedEntity
     public DrawingRevision? Revision { get; set; }
     public Workspace? Workspace { get; set; }
 }
+

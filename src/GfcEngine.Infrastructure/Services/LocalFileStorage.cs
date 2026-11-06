@@ -65,3 +65,4 @@ public class LocalFileStorage : IFileStorage
         return Path.Combine(_basePath, relativePath.Replace('/', Path.DirectorySeparatorChar));
     }
 }
+

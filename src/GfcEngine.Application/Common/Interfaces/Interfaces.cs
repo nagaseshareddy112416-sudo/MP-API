@@ -44,3 +44,9 @@ public interface IAuditService
 {
     Task LogAsync(Guid workspaceId, string action, string entityName, string entityId, string? details, string? userId = null, CancellationToken cancellationToken = default);
 }
+
+public interface IReferenceLayerService
+{
+    Task<string> ParseToGeoJsonAsync(Stream fileStream, string fileName, int sourceEpsg, CancellationToken cancellationToken = default);
+}
+

@@ -71,3 +71,4 @@ public class WorkspaceUserRole : WorkspaceScopedEntity
     public ApplicationUser? User { get; set; }
     public Workspace? Workspace { get; set; }
 }
+

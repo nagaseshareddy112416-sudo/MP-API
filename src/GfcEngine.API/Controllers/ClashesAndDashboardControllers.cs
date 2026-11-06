@@ -4,6 +4,7 @@ using CsvHelper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using GfcEngine.Application.Common.Interfaces;
 using GfcEngine.Application.DTOs;
 using GfcEngine.Domain.Entities;
 using GfcEngine.Domain.Enums;
@@ -116,10 +117,12 @@ public class ClashesController : ControllerBase
 public class ReferenceLayersController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
+    private readonly IReferenceLayerService _referenceLayerService;
 
-    public ReferenceLayersController(ApplicationDbContext context)
+    public ReferenceLayersController(ApplicationDbContext context, IReferenceLayerService referenceLayerService)
     {
         _context = context;
+        _referenceLayerService = referenceLayerService;
     }
 
     [HttpGet]
@@ -149,10 +152,18 @@ public class ReferenceLayersController : ControllerBase
     {
         if (file == null || file.Length == 0) return BadRequest("File is required");
 
+        var ws = await _context.Workspaces.FindAsync(workspaceId);
+        int sourceEpsg = ws?.DefaultEpsg ?? 32644;
+
         string geoJsonData;
-        using (var reader = new StreamReader(file.OpenReadStream()))
+        try
         {
-            geoJsonData = await reader.ReadToEndAsync();
+            using var stream = file.OpenReadStream();
+            geoJsonData = await _referenceLayerService.ParseToGeoJsonAsync(stream, file.FileName, sourceEpsg);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = $"Failed to parse reference file '{file.FileName}': {ex.Message}" });
         }
 
         var ext = Path.GetExtension(file.FileName).TrimStart('.').ToUpperInvariant();
@@ -314,3 +325,4 @@ public class DashboardController : ControllerBase
         return Ok(logs);
     }
 }
+

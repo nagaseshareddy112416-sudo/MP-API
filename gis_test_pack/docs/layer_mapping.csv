@@ -7,3 +7,4 @@ SEWER_LINE,Utility,Sewer,line,#8b4513
 STORM_DRAIN,Utility,Storm drain,line,#2ca02c
 POWER_CABLE,Utility,Power,line,#e63946
 BLDG_FOOTPRINT,Building,Footprint,polygon,#6c757d
+

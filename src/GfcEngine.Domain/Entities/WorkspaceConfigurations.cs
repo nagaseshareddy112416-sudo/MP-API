@@ -37,3 +37,4 @@ public class CategoryFieldConfig : WorkspaceScopedEntity
 
     public Workspace? Workspace { get; set; }
 }
+

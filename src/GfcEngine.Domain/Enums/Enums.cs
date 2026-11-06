@@ -29,3 +29,4 @@ public static class Roles
     public const string Reviewer = "Reviewer";
     public const string Viewer = "Viewer";
 }
+

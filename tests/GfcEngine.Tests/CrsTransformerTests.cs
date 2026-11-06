@@ -45,3 +45,4 @@ public class CrsTransformerTests
         transformed.Coordinates[0].X.Should().BeApproximately(80.516, 0.01);
     }
 }
+

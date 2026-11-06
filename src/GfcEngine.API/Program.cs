@@ -96,6 +96,7 @@ builder.Services.AddSingleton<IDwgConverter, StubDwgConverter>();
 builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddScoped<IDxfExtractionService, NetDxfExtractionService>();
 builder.Services.AddScoped<IClashDetectionService, ClashDetectionService>();
+builder.Services.AddScoped<IReferenceLayerService, ReferenceLayerService>();
 builder.Services.AddScoped<HangfireDxfProcessingJob>();
 builder.Services.AddScoped<SeedDataService>();
 

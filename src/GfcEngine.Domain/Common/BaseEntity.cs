@@ -9,3 +9,4 @@ public abstract class WorkspaceScopedEntity : BaseEntity
 {
     public Guid WorkspaceId { get; set; }
 }
+

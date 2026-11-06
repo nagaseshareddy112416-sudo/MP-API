@@ -96,3 +96,4 @@ public class WorkspaceAndSecurityTests
         (userRole.Role == Roles.WorkspaceAdmin).Should().BeFalse();
     }
 }
+

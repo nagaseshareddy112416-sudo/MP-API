@@ -45,3 +45,4 @@ public interface IClashDetectionService
 {
     Task<List<Clash>> DetectClashesForRevisionAsync(Guid revisionId, Guid workspaceId, double verticalToleranceM, CancellationToken cancellationToken = default);
 }
+

@@ -26,3 +26,4 @@ public class Workspace : BaseEntity
     public ICollection<AuditLog> AuditLogs { get; set; } = new List<AuditLog>();
     public ICollection<WorkspaceUserRole> UserRoles { get; set; } = new List<WorkspaceUserRole>();
 }
+

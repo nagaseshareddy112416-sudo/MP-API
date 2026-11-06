@@ -135,3 +135,4 @@ public class NetDxfExtractionTests
         result.UnmappedLayers.Should().Contain("XYZ_UNKNOWN");
     }
 }
+

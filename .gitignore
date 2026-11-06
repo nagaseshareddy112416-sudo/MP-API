@@ -17,8 +17,5 @@ uploads/
 storage/
 temp/
 logs/
-
-## Test DXFs generated (keep source scripts & csv)
-/gis_test_pack/gfc_dxf/
-/gis_test_pack/gfc_dxf_invalid/
 *.dwg
+
