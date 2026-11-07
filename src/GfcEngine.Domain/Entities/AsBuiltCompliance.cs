@@ -90,3 +90,4 @@ public class Deviation : WorkspaceScopedEntity
     public ComplianceResult? ComplianceResult { get; set; }
     public Workspace? Workspace { get; set; }
 }
+

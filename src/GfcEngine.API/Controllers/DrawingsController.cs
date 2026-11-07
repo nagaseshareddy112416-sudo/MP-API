@@ -383,6 +383,63 @@ public class DrawingsController : ControllerBase
         var stream = await _fileStorage.OpenReadAsync(drawing.StoragePath);
         return File(stream, "application/octet-stream", drawing.OriginalFileName);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteDrawing(Guid workspaceId, Guid id)
+    {
+        var drawing = await _context.UploadedDrawings
+            .Include(d => d.Revisions)
+            .Include(d => d.Features)
+            .FirstOrDefaultAsync(d => d.WorkspaceId == workspaceId && d.Id == id);
+
+        if (drawing == null) return NotFound(new { message = "Drawing not found." });
+
+        var featureIds = drawing.Features.Select(f => f.Id).ToList();
+
+        // 1. Remove associated clashes
+        var clashes = await _context.Clashes
+            .Where(c => featureIds.Contains(c.FeatureAId) || featureIds.Contains(c.FeatureBId))
+            .ToListAsync();
+        _context.Clashes.RemoveRange(clashes);
+
+        // 2. Remove feature matches & compliance results
+        var matches = await _context.FeatureMatches
+            .Where(m => (m.GfcFeatureId.HasValue && featureIds.Contains(m.GfcFeatureId.Value)) || (m.AsBuiltFeatureId.HasValue && featureIds.Contains(m.AsBuiltFeatureId.Value)))
+            .ToListAsync();
+        _context.FeatureMatches.RemoveRange(matches);
+
+        var complianceResults = await _context.ComplianceResults
+            .Where(r => (r.GfcFeatureId.HasValue && featureIds.Contains(r.GfcFeatureId.Value)) || (r.AsBuiltFeatureId.HasValue && featureIds.Contains(r.AsBuiltFeatureId.Value)))
+            .ToListAsync();
+        _context.ComplianceResults.RemoveRange(complianceResults);
+
+        // 3. Remove extracted features
+        _context.ExtractedFeatures.RemoveRange(drawing.Features);
+
+        // 4. Remove physical files
+        foreach (var rev in drawing.Revisions)
+        {
+            if (!string.IsNullOrEmpty(rev.StoragePath))
+            {
+                try { await _fileStorage.DeleteFileAsync(rev.StoragePath); } catch { }
+            }
+        }
+        if (!string.IsNullOrEmpty(drawing.StoragePath))
+        {
+            try { await _fileStorage.DeleteFileAsync(drawing.StoragePath); } catch { }
+        }
+
+        // 5. Remove revisions & drawing
+        _context.DrawingRevisions.RemoveRange(drawing.Revisions);
+        _context.UploadedDrawings.Remove(drawing);
+
+        await _context.SaveChangesAsync();
+
+        var user = User.Identity?.Name ?? "Admin";
+        await _auditService.LogAsync(workspaceId, "Delete", "UploadedDrawing", id.ToString(), $"Deleted drawing '{drawing.ProjectName}'", user);
+
+        return Ok(new { message = $"Drawing '{drawing.ProjectName}' and all associated data have been deleted." });
+    }
 }
 
 public class CoordinateDto

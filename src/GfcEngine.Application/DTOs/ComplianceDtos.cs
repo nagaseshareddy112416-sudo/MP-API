@@ -121,3 +121,4 @@ public class CategoryComplianceDto
     public int Extra { get; set; }
     public double CompliancePercentage { get; set; }
 }
+
