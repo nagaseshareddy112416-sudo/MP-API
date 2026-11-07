@@ -215,6 +215,47 @@ public class SeedDataService
             await _context.SaveChangesAsync();
         }
 
+        // 6. Drawing Stages (Phase 9)
+        var stageCount = await _context.DrawingStages.CountAsync(s => s.WorkspaceId == defaultWorkspace.Id);
+        if (stageCount == 0)
+        {
+            var stages = new List<DrawingStage>
+            {
+                new() { WorkspaceId = defaultWorkspace.Id, Name = "Concept", StageOrder = 1, Description = "Initial architectural and engineering concept" },
+                new() { WorkspaceId = defaultWorkspace.Id, Name = "Preliminary Design", StageOrder = 2, Description = "Preliminary schematic design" },
+                new() { WorkspaceId = defaultWorkspace.Id, Name = "Detailed Design", StageOrder = 3, Description = "Detailed engineering design" },
+                new() { WorkspaceId = defaultWorkspace.Id, Name = "Tender (IFT)", StageOrder = 4, Description = "Issued for tender" },
+                new() { WorkspaceId = defaultWorkspace.Id, Name = "GFC (Approved for Construction)", StageOrder = 5, IsDefault = true, IsGfcBaseline = true, Description = "Good For Construction baseline drawing" },
+                new() { WorkspaceId = defaultWorkspace.Id, Name = "Shop Drawing", StageOrder = 6, Description = "Fabrication and contractor shop drawings" },
+                new() { WorkspaceId = defaultWorkspace.Id, Name = "As-Built", StageOrder = 7, IsAsBuilt = true, Description = "Record drawing reflecting actual site construction" },
+                new() { WorkspaceId = defaultWorkspace.Id, Name = "Handover", StageOrder = 8, Description = "Final handover and closeout documentation" }
+            };
+
+            _context.DrawingStages.AddRange(stages);
+            await _context.SaveChangesAsync();
+            _logger.LogInformation("Seeded 8 Drawing Stages for workspace");
+        }
+
+        // 7. Tolerance Rules (Phase 9)
+        var ruleCount = await _context.ToleranceRules.CountAsync(r => r.WorkspaceId == defaultWorkspace.Id);
+        if (ruleCount == 0)
+        {
+            var rules = new List<ToleranceRule>
+            {
+                new() { WorkspaceId = defaultWorkspace.Id, Category = "Road", SubType = "Centerline", HorizontalToleranceM = 0.10, VerticalToleranceM = 0.05, LengthToleranceM = 0.50, Notes = "Placeholder - to be confirmed against project specification" },
+                new() { WorkspaceId = defaultWorkspace.Id, Category = "Road", SubType = "Edge of pavement", HorizontalToleranceM = 0.10, VerticalToleranceM = 0.05, LengthToleranceM = 0.50, Notes = "Placeholder - to be confirmed against project specification" },
+                new() { WorkspaceId = defaultWorkspace.Id, Category = "Utility", SubType = "Water", HorizontalToleranceM = 0.20, VerticalToleranceM = 0.10, LengthToleranceM = 0.50, Notes = "Placeholder - to be confirmed against project specification" },
+                new() { WorkspaceId = defaultWorkspace.Id, Category = "Utility", SubType = "Sewer", HorizontalToleranceM = 0.20, VerticalToleranceM = 0.10, LengthToleranceM = 0.50, Notes = "Placeholder - to be confirmed against project specification" },
+                new() { WorkspaceId = defaultWorkspace.Id, Category = "Utility", SubType = "Storm drain", HorizontalToleranceM = 0.20, VerticalToleranceM = 0.10, LengthToleranceM = 0.50, Notes = "Placeholder - to be confirmed against project specification" },
+                new() { WorkspaceId = defaultWorkspace.Id, Category = "Utility", SubType = "Power", HorizontalToleranceM = 0.30, VerticalToleranceM = 0.15, LengthToleranceM = 0.50, Notes = "Placeholder - to be confirmed against project specification" },
+                new() { WorkspaceId = defaultWorkspace.Id, Category = "Building", SubType = "Footprint", HorizontalToleranceM = 0.05, VerticalToleranceM = 0.05, LengthToleranceM = 0.10, Notes = "Placeholder - to be confirmed against project specification" }
+            };
+
+            _context.ToleranceRules.AddRange(rules);
+            await _context.SaveChangesAsync();
+            _logger.LogInformation("Seeded 7 Tolerance Rules for workspace");
+        }
+
         // 6. Admin User
         var adminEmail = _configuration["AdminUser:Email"] ?? "admin@gfcengine.com";
         var adminPassword = _configuration["AdminUser:DefaultPassword"] ?? "Admin@Gfc2026!";

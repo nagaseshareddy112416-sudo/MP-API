@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using GfcEngine.Application.Common.Interfaces;
 using GfcEngine.Domain.Entities;
+using GfcEngine.Domain.Enums;
 using GfcEngine.Infrastructure.Persistence;
 
 namespace GfcEngine.Infrastructure.Jobs;
@@ -59,6 +60,8 @@ public class HangfireDxfProcessingJob
                 return;
             }
 
+            bool isAsBuilt = drawing.Stage?.IsAsBuilt == true || string.Equals(drawing.StageName, "As-Built", StringComparison.OrdinalIgnoreCase);
+
             // Save extracted features
             var features = extractResult.Entities.Select(e => new ExtractedFeature
             {
@@ -76,6 +79,8 @@ public class HangfireDxfProcessingJob
                 DiameterMm = e.DiameterMm,
                 Material = e.Material,
                 Chainage = e.Chainage,
+                IsAsBuilt = isAsBuilt,
+                ConstructionStatus = isAsBuilt ? ConstructionStatus.UnderConstruction : ConstructionStatus.NotStarted,
                 IsActive = false // Features become active once the drawing revision is approved!
             }).ToList();
 

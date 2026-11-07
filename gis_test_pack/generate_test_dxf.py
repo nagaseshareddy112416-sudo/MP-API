@@ -5,6 +5,7 @@ E0, N0 = 448350, 1825744   # UTM 44N origin near 16.513N, 80.516E
 OUT = os.path.join(os.path.dirname(__file__), "")
 os.makedirs(OUT + "gfc_dxf", exist_ok=True)
 os.makedirs(OUT + "gfc_dxf_invalid", exist_ok=True)
+os.makedirs(OUT + "asbuilt_dxf", exist_ok=True)
 
 def L(x, y):
     return (E0 + x, N0 + y)
@@ -78,5 +79,45 @@ doc, m = new_doc(["XYZ_UNKNOWN"])
 m.add_lwpolyline([L(-100, 300), L(100, 300)], dxfattribs={"layer": "XYZ_UNKNOWN"})
 doc.saveas(OUT + "gfc_dxf_invalid/INVALID_unmapped_layer.dxf")
 
-print("Test DXF files created.")
+# ============================================================
+# PHASE 9 AS-BUILT DXF GENERATION
+# ============================================================
+
+# 1. Road R1 As-Built: Centerline and north edge match GFC; south edge offset by 0.05m -> Within Tolerance
+doc, m = new_doc(["ROAD_CL", "ROAD_EDGE", "CHAINAGE", "TEXT"])
+m.add_lwpolyline([L(-500, 0), L(500, 0)], dxfattribs={"layer": "ROAD_CL"})
+m.add_lwpolyline([L(-500, 15), L(500, 15)], dxfattribs={"layer": "ROAD_EDGE"})
+m.add_lwpolyline([L(-500, -15.05), L(500, -15.05)], dxfattribs={"layer": "ROAD_EDGE"}) # 0.05m deviation
+for k in range(0, 1001, 100):
+    p = L(-500 + k, 0)
+    m.add_point(p, dxfattribs={"layer": "CHAINAGE"})
+    m.add_text(f"{k//1000}+{k%1000:03d}",
+               dxfattribs={"layer": "CHAINAGE", "height": 4}).set_placement((p[0], p[1] + 20))
+m.add_text("AS-BUILT R1 MAIN AVENUE CH 0+000 TO 1+000",
+           dxfattribs={"layer": "TEXT", "height": 6}).set_placement(L(-500, 60))
+doc.saveas(OUT + "asbuilt_dxf/ASBUILT_ROAD_R1_CH0000-1000.dxf")
+
+# 2. Water Main As-Built: Shifted 0.6 m sideways (y = 8.6 instead of 8.0) and depth 1.9 m (Z = -1.9 instead of -1.5) -> Deviation
+doc, m = new_doc(["WATER_MAIN", "TEXT"])
+m.add_polyline3d([(*L(-500, 8.6), -1.9), (*L(500, 8.6), -1.9)], dxfattribs={"layer": "WATER_MAIN"})
+m.add_text("AS-BUILT WATER MAIN DN300 DI DEPTH 1.9m",
+           dxfattribs={"layer": "TEXT", "height": 5}).set_placement(L(-500, 40))
+doc.saveas(OUT + "asbuilt_dxf/ASBUILT_WATER_R1_CH0000-1000.dxf")
+
+# 3. Sewer As-Built: Identical to GFC at (0, -200) to (0, 200), depth 1.7 m -> Compliant
+doc, m = new_doc(["SEWER_LINE", "TEXT"])
+m.add_polyline3d([(*L(0, -200), -1.7), (*L(0, 200), -1.7)], dxfattribs={"layer": "SEWER_LINE"})
+m.add_text("AS-BUILT SEWER DN400 RCC DEPTH 1.7m",
+           dxfattribs={"layer": "TEXT", "height": 5}).set_placement(L(10, 200))
+doc.saveas(OUT + "asbuilt_dxf/ASBUILT_SEWER_R2_CH0000-0400.dxf")
+
+# 4. Storm Drain As-Built: Intentionally OMITTED -> GFC Storm Drain will be classified as 'Missing'
+
+# 5. Power Cable As-Built: Identical main run (y = -8, depth 0.9m), plus one extra short branch from (100, -8) to (100, 30) -> 'Extra'
+doc, m = new_doc(["POWER_CABLE"])
+m.add_polyline3d([(*L(-500, -8), -0.9), (*L(500, -8), -0.9)], dxfattribs={"layer": "POWER_CABLE"})
+m.add_polyline3d([(*L(100, -8), -0.9), (*L(100, 30), -0.9)], dxfattribs={"layer": "POWER_CABLE"}) # Extra branch
+doc.saveas(OUT + "asbuilt_dxf/ASBUILT_POWER_R1_CH0000-1000.dxf")
+
+print("All GFC and Phase 9 As-Built test DXF files created successfully.")
 

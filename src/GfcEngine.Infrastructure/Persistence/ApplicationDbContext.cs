@@ -23,6 +23,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<ReferenceLayer> ReferenceLayers => Set<ReferenceLayer>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<WorkspaceUserRole> WorkspaceUserRoles => Set<WorkspaceUserRole>();
+    public DbSet<DrawingStage> DrawingStages => Set<DrawingStage>();
+    public DbSet<ToleranceRule> ToleranceRules => Set<ToleranceRule>();
+    public DbSet<FeatureMatch> FeatureMatches => Set<FeatureMatch>();
+    public DbSet<ComplianceResult> ComplianceResults => Set<ComplianceResult>();
+    public DbSet<Deviation> Deviations => Set<Deviation>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -96,6 +101,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
                 .WithMany(w => w.Drawings)
                 .HasForeignKey(d => d.WorkspaceId)
                 .OnDelete(DeleteBehavior.Cascade);
+            b.HasOne(d => d.GfcDrawing)
+                .WithMany()
+                .HasForeignKey(d => d.GfcDrawingId)
+                .OnDelete(DeleteBehavior.NoAction);
+            b.HasOne(d => d.Stage)
+                .WithMany()
+                .HasForeignKey(d => d.StageId)
+                .OnDelete(DeleteBehavior.NoAction);
             b.HasIndex(d => new { d.WorkspaceId, d.Status });
         });
 
@@ -211,6 +224,110 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
                 .HasForeignKey(ur => ur.WorkspaceId)
                 .OnDelete(DeleteBehavior.Cascade);
             b.HasIndex(ur => new { ur.WorkspaceId, ur.UserId }).IsUnique();
+        });
+
+        // DrawingStage
+        builder.Entity<DrawingStage>(b =>
+        {
+            b.HasKey(s => s.Id);
+            b.Property(s => s.Name).IsRequired().HasMaxLength(100);
+            b.HasOne(s => s.Workspace)
+                .WithMany()
+                .HasForeignKey(s => s.WorkspaceId)
+                .OnDelete(DeleteBehavior.Cascade);
+            b.HasIndex(s => new { s.WorkspaceId, s.StageOrder });
+        });
+
+        // ToleranceRule
+        builder.Entity<ToleranceRule>(b =>
+        {
+            b.HasKey(t => t.Id);
+            b.Property(t => t.Category).IsRequired().HasMaxLength(100);
+            b.Property(t => t.SubType).IsRequired().HasMaxLength(100);
+            b.HasOne(t => t.Workspace)
+                .WithMany()
+                .HasForeignKey(t => t.WorkspaceId)
+                .OnDelete(DeleteBehavior.Cascade);
+            b.HasIndex(t => new { t.WorkspaceId, t.Category, t.SubType });
+        });
+
+        // FeatureMatch
+        builder.Entity<FeatureMatch>(b =>
+        {
+            b.HasKey(m => m.Id);
+            b.HasOne(m => m.AsBuiltDrawing)
+                .WithMany()
+                .HasForeignKey(m => m.AsBuiltDrawingId)
+                .OnDelete(DeleteBehavior.NoAction);
+            b.HasOne(m => m.GfcDrawing)
+                .WithMany()
+                .HasForeignKey(m => m.GfcDrawingId)
+                .OnDelete(DeleteBehavior.NoAction);
+            b.HasOne(m => m.AsBuiltFeature)
+                .WithMany()
+                .HasForeignKey(m => m.AsBuiltFeatureId)
+                .OnDelete(DeleteBehavior.NoAction);
+            b.HasOne(m => m.GfcFeature)
+                .WithMany()
+                .HasForeignKey(m => m.GfcFeatureId)
+                .OnDelete(DeleteBehavior.NoAction);
+            b.HasOne(m => m.Workspace)
+                .WithMany()
+                .HasForeignKey(m => m.WorkspaceId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        // ComplianceResult
+        builder.Entity<ComplianceResult>(b =>
+        {
+            b.HasKey(c => c.Id);
+            b.Property(c => c.Category).IsRequired().HasMaxLength(100);
+            b.Property(c => c.SubType).IsRequired().HasMaxLength(100);
+            b.HasOne(c => c.AsBuiltDrawing)
+                .WithMany()
+                .HasForeignKey(c => c.AsBuiltDrawingId)
+                .OnDelete(DeleteBehavior.NoAction);
+            b.HasOne(c => c.GfcDrawing)
+                .WithMany()
+                .HasForeignKey(c => c.GfcDrawingId)
+                .OnDelete(DeleteBehavior.NoAction);
+            b.HasOne(c => c.GfcRevision)
+                .WithMany()
+                .HasForeignKey(c => c.GfcRevisionId)
+                .OnDelete(DeleteBehavior.NoAction);
+            b.HasOne(c => c.FeatureMatch)
+                .WithMany()
+                .HasForeignKey(c => c.FeatureMatchId)
+                .OnDelete(DeleteBehavior.NoAction);
+            b.HasOne(c => c.AsBuiltFeature)
+                .WithMany()
+                .HasForeignKey(c => c.AsBuiltFeatureId)
+                .OnDelete(DeleteBehavior.NoAction);
+            b.HasOne(c => c.GfcFeature)
+                .WithMany()
+                .HasForeignKey(c => c.GfcFeatureId)
+                .OnDelete(DeleteBehavior.NoAction);
+            b.HasOne(c => c.Workspace)
+                .WithMany()
+                .HasForeignKey(c => c.WorkspaceId)
+                .OnDelete(DeleteBehavior.NoAction);
+            b.HasIndex(c => new { c.WorkspaceId, c.AsBuiltDrawingId, c.Status });
+        });
+
+        // Deviation
+        builder.Entity<Deviation>(b =>
+        {
+            b.HasKey(d => d.Id);
+            b.Property(d => d.Reason).HasMaxLength(1000);
+            b.Property(d => d.DecidedBy).HasMaxLength(100);
+            b.HasOne(d => d.ComplianceResult)
+                .WithMany(c => c.Deviations)
+                .HasForeignKey(d => d.ComplianceResultId)
+                .OnDelete(DeleteBehavior.Cascade);
+            b.HasOne(d => d.Workspace)
+                .WithMany()
+                .HasForeignKey(d => d.WorkspaceId)
+                .OnDelete(DeleteBehavior.NoAction);
         });
     }
 }

@@ -22,6 +22,43 @@ public enum ClashStatus
     Ignored
 }
 
+public enum ComplianceStatus
+{
+    Compliant,
+    WithinTolerance,
+    Deviation,
+    Missing,
+    Extra
+}
+
+public enum DeviationDecision
+{
+    Pending,
+    Accepted,
+    Rectify,
+    Rejected
+}
+
+public enum CoordinateSource
+{
+    Survey,
+    Redrawn,
+    Unknown
+}
+
+public enum FeatureMatchType
+{
+    Automatic,
+    Manual
+}
+
+public enum ConstructionStatus
+{
+    NotStarted,
+    UnderConstruction,
+    Completed
+}
+
 public static class Roles
 {
     public const string WorkspaceAdmin = "WorkspaceAdmin";

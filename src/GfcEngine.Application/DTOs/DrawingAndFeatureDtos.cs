@@ -18,6 +18,10 @@ public class UploadDrawingRequestDto
     public string? Notes { get; set; }
     public double? PinX { get; set; }
     public double? PinY { get; set; }
+    public Guid? StageId { get; set; }
+    public string? StageName { get; set; }
+    public CoordinateSource? SourceOfCoordinates { get; set; }
+    public Guid? GfcDrawingId { get; set; }
 }
 
 public class DrawingDto
@@ -46,6 +50,11 @@ public class DrawingDto
     public DateTime CreatedAt { get; set; }
     public double? PinLon { get; set; }
     public double? PinLat { get; set; }
+    public Guid? StageId { get; set; }
+    public string? StageName { get; set; }
+    public CoordinateSource? SourceOfCoordinates { get; set; }
+    public Guid? GfcDrawingId { get; set; }
+    public Guid? GfcRevisionId { get; set; }
 }
 
 public class RevisionDto

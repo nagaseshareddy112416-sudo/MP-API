@@ -16,8 +16,23 @@ public interface IApplicationDbContext
     DbSet<ReferenceLayer> ReferenceLayers { get; }
     DbSet<AuditLog> AuditLogs { get; }
     DbSet<WorkspaceUserRole> WorkspaceUserRoles { get; }
+    DbSet<DrawingStage> DrawingStages { get; }
+    DbSet<ToleranceRule> ToleranceRules { get; }
+    DbSet<FeatureMatch> FeatureMatches { get; }
+    DbSet<ComplianceResult> ComplianceResults { get; }
+    DbSet<Deviation> Deviations { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+}
+
+public interface IFeatureMatchingService
+{
+    Task<List<FeatureMatch>> MatchFeaturesAsync(Guid workspaceId, Guid asBuiltDrawingId, Guid gfcDrawingId, double searchDistanceM = 5.0, CancellationToken ct = default);
+}
+
+public interface IComplianceEngineService
+{
+    Task<List<ComplianceResult>> EvaluateComplianceAsync(Guid workspaceId, Guid asBuiltDrawingId, CancellationToken ct = default);
 }
 
 public interface ICurrentUserService

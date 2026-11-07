@@ -30,6 +30,7 @@ public class FeaturesController : ControllerBase
         Guid workspaceId,
         [FromQuery] string? bbox,
         [FromQuery] string? category,
+        [FromQuery] bool? isAsBuilt,
         [FromQuery] int? zoom)
     {
         var query = _context.ExtractedFeatures
@@ -38,6 +39,11 @@ public class FeaturesController : ControllerBase
         if (!string.IsNullOrEmpty(category))
         {
             query = query.Where(f => f.Category == category);
+        }
+
+        if (isAsBuilt.HasValue)
+        {
+            query = query.Where(f => f.IsAsBuilt == isAsBuilt.Value);
         }
 
         // Bounding box filter (in display WGS84 coords: minLon, minLat, maxLon, maxLat)
@@ -73,7 +79,10 @@ public class FeaturesController : ControllerBase
                 { "diameter", f.DiameterMm },
                 { "material", f.Material },
                 { "chainage", f.Chainage },
-                { "revision", f.Drawing?.CurrentRevision ?? "" }
+                { "revision", f.Drawing?.CurrentRevision ?? "" },
+                { "isAsBuilt", f.IsAsBuilt },
+                { "stageName", f.Drawing?.StageName ?? "" },
+                { "constructionStatus", f.ConstructionStatus.ToString() }
             };
 
             featureCollection.Add(new Feature(f.DisplayGeometry, attr));

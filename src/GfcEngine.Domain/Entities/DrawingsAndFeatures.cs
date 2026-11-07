@@ -12,6 +12,11 @@ public class UploadedDrawing : WorkspaceScopedEntity
     public string CurrentRevision { get; set; } = "R0";
     public DrawingStatus Status { get; set; } = DrawingStatus.Design;
     public ReviewStatus ReviewStatus { get; set; } = ReviewStatus.Pending;
+    public Guid? StageId { get; set; }
+    public string StageName { get; set; } = "GFC";
+    public CoordinateSource SourceOfCoordinates { get; set; } = CoordinateSource.Survey;
+    public Guid? GfcDrawingId { get; set; }
+    public Guid? GfcRevisionId { get; set; }
     public string? Contractor { get; set; }
     public string? Consultant { get; set; }
     public DateTime? DrawingDate { get; set; }
@@ -32,6 +37,9 @@ public class UploadedDrawing : WorkspaceScopedEntity
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public Workspace? Workspace { get; set; }
+    public DrawingStage? Stage { get; set; }
+    public UploadedDrawing? GfcDrawing { get; set; }
+    public DrawingRevision? GfcRevision { get; set; }
     public ICollection<DrawingRevision> Revisions { get; set; } = new List<DrawingRevision>();
     public ICollection<ExtractedFeature> Features { get; set; } = new List<ExtractedFeature>();
 }
@@ -71,6 +79,8 @@ public class ExtractedFeature : WorkspaceScopedEntity
     public string? Material { get; set; }
     public double? Chainage { get; set; }
     public string? AttributesJson { get; set; }
+    public ConstructionStatus ConstructionStatus { get; set; } = ConstructionStatus.NotStarted;
+    public bool IsAsBuilt { get; set; } = false;
     public bool IsActive { get; set; } = false; // True only for approved latest revision
 
     public UploadedDrawing? Drawing { get; set; }

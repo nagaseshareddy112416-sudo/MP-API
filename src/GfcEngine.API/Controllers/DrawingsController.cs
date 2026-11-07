@@ -73,7 +73,12 @@ public class DrawingsController : ControllerBase
                 CreatedBy = d.CreatedBy,
                 CreatedAt = d.CreatedAt,
                 PinLon = d.DisplayPinLocation != null ? d.DisplayPinLocation.Coordinate.X : null,
-                PinLat = d.DisplayPinLocation != null ? d.DisplayPinLocation.Coordinate.Y : null
+                PinLat = d.DisplayPinLocation != null ? d.DisplayPinLocation.Coordinate.Y : null,
+                StageId = d.StageId,
+                StageName = d.StageName,
+                SourceOfCoordinates = d.SourceOfCoordinates,
+                GfcDrawingId = d.GfcDrawingId,
+                GfcRevisionId = d.GfcRevisionId
             })
             .ToListAsync();
 
@@ -111,7 +116,12 @@ public class DrawingsController : ControllerBase
             CreatedBy = d.CreatedBy,
             CreatedAt = d.CreatedAt,
             PinLon = d.DisplayPinLocation != null ? d.DisplayPinLocation.Coordinate.X : null,
-            PinLat = d.DisplayPinLocation != null ? d.DisplayPinLocation.Coordinate.Y : null
+            PinLat = d.DisplayPinLocation != null ? d.DisplayPinLocation.Coordinate.Y : null,
+            StageId = d.StageId,
+            StageName = d.StageName,
+            SourceOfCoordinates = d.SourceOfCoordinates,
+            GfcDrawingId = d.GfcDrawingId,
+            GfcRevisionId = d.GfcRevisionId
         });
     }
 
@@ -239,6 +249,10 @@ public class DrawingsController : ControllerBase
             drawing.ReviewStatus = ReviewStatus.Pending; // Needs re-approval
             drawing.ProcessingStatus = ext == ".dxf" ? "Queued" : "Completed";
             drawing.ProcessingError = null;
+            drawing.StageId = request.StageId;
+            drawing.StageName = request.StageName;
+            drawing.SourceOfCoordinates = request.SourceOfCoordinates ?? CoordinateSource.Survey;
+            drawing.GfcDrawingId = request.GfcDrawingId;
 
             revision = new DrawingRevision
             {
@@ -280,7 +294,11 @@ public class DrawingsController : ControllerBase
                 ProcessingStatus = ext == ".dxf" ? "Queued" : "Completed",
                 Notes = request.Notes,
                 CreatedBy = user,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                StageId = request.StageId,
+                StageName = request.StageName,
+                SourceOfCoordinates = request.SourceOfCoordinates ?? CoordinateSource.Survey,
+                GfcDrawingId = request.GfcDrawingId
             };
 
             _context.UploadedDrawings.Add(drawing);

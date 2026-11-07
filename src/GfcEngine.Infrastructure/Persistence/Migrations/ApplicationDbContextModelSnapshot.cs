@@ -329,6 +329,127 @@ namespace GfcEngine.Infrastructure.Persistence.Migrations
                     b.ToTable("Clashes");
                 });
 
+            modelBuilder.Entity("GfcEngine.Domain.Entities.ComplianceResult", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AsBuiltDrawingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AsBuiltFeatureId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AttributeDiffsJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("AverageHorizontalDeviationM")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<double?>("ChainageEnd")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("ChainageStart")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("ComputedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("FeatureMatchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GfcDrawingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("GfcFeatureId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GfcRevisionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("HorizontalDeviationM")
+                        .HasColumnType("float");
+
+                    b.Property<double>("LengthDeviationM")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SubType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<double>("VerticalDeviationM")
+                        .HasColumnType("float");
+
+                    b.Property<Guid>("WorkspaceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AsBuiltDrawingId");
+
+                    b.HasIndex("AsBuiltFeatureId");
+
+                    b.HasIndex("FeatureMatchId");
+
+                    b.HasIndex("GfcDrawingId");
+
+                    b.HasIndex("GfcFeatureId");
+
+                    b.HasIndex("GfcRevisionId");
+
+                    b.HasIndex("WorkspaceId", "AsBuiltDrawingId", "Status");
+
+                    b.ToTable("ComplianceResults");
+                });
+
+            modelBuilder.Entity("GfcEngine.Domain.Entities.Deviation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ComplianceResultId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DecidedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DecidedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Decision")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Reason")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<Guid>("WorkspaceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComplianceResultId");
+
+                    b.HasIndex("WorkspaceId");
+
+                    b.ToTable("Deviations");
+                });
+
             modelBuilder.Entity("GfcEngine.Domain.Entities.DrawingRevision", b =>
                 {
                     b.Property<Guid>("Id")
@@ -385,6 +506,42 @@ namespace GfcEngine.Infrastructure.Persistence.Migrations
                     b.ToTable("DrawingRevisions");
                 });
 
+            modelBuilder.Entity("GfcEngine.Domain.Entities.DrawingStage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAsBuilt")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsGfcBaseline")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("StageOrder")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("WorkspaceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId", "StageOrder");
+
+                    b.ToTable("DrawingStages");
+                });
+
             modelBuilder.Entity("GfcEngine.Domain.Entities.ExtractedFeature", b =>
                 {
                     b.Property<Guid>("Id")
@@ -407,6 +564,9 @@ namespace GfcEngine.Infrastructure.Persistence.Migrations
                     b.Property<double?>("Chainage")
                         .HasColumnType("float");
 
+                    b.Property<int>("ConstructionStatus")
+                        .HasColumnType("int");
+
                     b.Property<double?>("DepthM")
                         .HasColumnType("float");
 
@@ -426,6 +586,9 @@ namespace GfcEngine.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAsBuilt")
                         .HasColumnType("bit");
 
                     b.Property<string>("Material")
@@ -458,6 +621,48 @@ namespace GfcEngine.Infrastructure.Persistence.Migrations
                     b.HasIndex("WorkspaceId", "IsActive");
 
                     b.ToTable("ExtractedFeatures");
+                });
+
+            modelBuilder.Entity("GfcEngine.Domain.Entities.FeatureMatch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AsBuiltDrawingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AsBuiltFeatureId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GfcDrawingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("GfcFeatureId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("MatchType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("MatchedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("WorkspaceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AsBuiltDrawingId");
+
+                    b.HasIndex("AsBuiltFeatureId");
+
+                    b.HasIndex("GfcDrawingId");
+
+                    b.HasIndex("GfcFeatureId");
+
+                    b.HasIndex("WorkspaceId");
+
+                    b.ToTable("FeatureMatches");
                 });
 
             modelBuilder.Entity("GfcEngine.Domain.Entities.ReferenceLayer", b =>
@@ -510,6 +715,47 @@ namespace GfcEngine.Infrastructure.Persistence.Migrations
                     b.ToTable("ReferenceLayers");
                 });
 
+            modelBuilder.Entity("GfcEngine.Domain.Entities.ToleranceRule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AttributeRulesJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<double>("HorizontalToleranceM")
+                        .HasColumnType("float");
+
+                    b.Property<double>("LengthToleranceM")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<double>("VerticalToleranceM")
+                        .HasColumnType("float");
+
+                    b.Property<Guid>("WorkspaceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId", "Category", "SubType");
+
+                    b.ToTable("ToleranceRules");
+                });
+
             modelBuilder.Entity("GfcEngine.Domain.Entities.UploadedDrawing", b =>
                 {
                     b.Property<Guid>("Id")
@@ -558,6 +804,12 @@ namespace GfcEngine.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("GfcDrawingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("GfcRevisionId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("JobId")
                         .HasColumnType("nvarchar(max)");
 
@@ -589,6 +841,16 @@ namespace GfcEngine.Infrastructure.Persistence.Migrations
                     b.Property<int>("SourceEpsg")
                         .HasColumnType("int");
 
+                    b.Property<int>("SourceOfCoordinates")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("StageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("StageName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -605,6 +867,12 @@ namespace GfcEngine.Infrastructure.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GfcDrawingId");
+
+                    b.HasIndex("GfcRevisionId");
+
+                    b.HasIndex("StageId");
 
                     b.HasIndex("WorkspaceId", "Status");
 
@@ -910,6 +1178,81 @@ namespace GfcEngine.Infrastructure.Persistence.Migrations
                     b.Navigation("Workspace");
                 });
 
+            modelBuilder.Entity("GfcEngine.Domain.Entities.ComplianceResult", b =>
+                {
+                    b.HasOne("GfcEngine.Domain.Entities.UploadedDrawing", "AsBuiltDrawing")
+                        .WithMany()
+                        .HasForeignKey("AsBuiltDrawingId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("GfcEngine.Domain.Entities.ExtractedFeature", "AsBuiltFeature")
+                        .WithMany()
+                        .HasForeignKey("AsBuiltFeatureId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("GfcEngine.Domain.Entities.FeatureMatch", "FeatureMatch")
+                        .WithMany()
+                        .HasForeignKey("FeatureMatchId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("GfcEngine.Domain.Entities.UploadedDrawing", "GfcDrawing")
+                        .WithMany()
+                        .HasForeignKey("GfcDrawingId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("GfcEngine.Domain.Entities.ExtractedFeature", "GfcFeature")
+                        .WithMany()
+                        .HasForeignKey("GfcFeatureId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("GfcEngine.Domain.Entities.DrawingRevision", "GfcRevision")
+                        .WithMany()
+                        .HasForeignKey("GfcRevisionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("GfcEngine.Domain.Entities.Workspace", "Workspace")
+                        .WithMany()
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("AsBuiltDrawing");
+
+                    b.Navigation("AsBuiltFeature");
+
+                    b.Navigation("FeatureMatch");
+
+                    b.Navigation("GfcDrawing");
+
+                    b.Navigation("GfcFeature");
+
+                    b.Navigation("GfcRevision");
+
+                    b.Navigation("Workspace");
+                });
+
+            modelBuilder.Entity("GfcEngine.Domain.Entities.Deviation", b =>
+                {
+                    b.HasOne("GfcEngine.Domain.Entities.ComplianceResult", "ComplianceResult")
+                        .WithMany("Deviations")
+                        .HasForeignKey("ComplianceResultId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GfcEngine.Domain.Entities.Workspace", "Workspace")
+                        .WithMany()
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("ComplianceResult");
+
+                    b.Navigation("Workspace");
+                });
+
             modelBuilder.Entity("GfcEngine.Domain.Entities.DrawingRevision", b =>
                 {
                     b.HasOne("GfcEngine.Domain.Entities.UploadedDrawing", "Drawing")
@@ -925,6 +1268,17 @@ namespace GfcEngine.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Drawing");
+
+                    b.Navigation("Workspace");
+                });
+
+            modelBuilder.Entity("GfcEngine.Domain.Entities.DrawingStage", b =>
+                {
+                    b.HasOne("GfcEngine.Domain.Entities.Workspace", "Workspace")
+                        .WithMany()
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Workspace");
                 });
@@ -956,6 +1310,47 @@ namespace GfcEngine.Infrastructure.Persistence.Migrations
                     b.Navigation("Workspace");
                 });
 
+            modelBuilder.Entity("GfcEngine.Domain.Entities.FeatureMatch", b =>
+                {
+                    b.HasOne("GfcEngine.Domain.Entities.UploadedDrawing", "AsBuiltDrawing")
+                        .WithMany()
+                        .HasForeignKey("AsBuiltDrawingId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("GfcEngine.Domain.Entities.ExtractedFeature", "AsBuiltFeature")
+                        .WithMany()
+                        .HasForeignKey("AsBuiltFeatureId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("GfcEngine.Domain.Entities.UploadedDrawing", "GfcDrawing")
+                        .WithMany()
+                        .HasForeignKey("GfcDrawingId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("GfcEngine.Domain.Entities.ExtractedFeature", "GfcFeature")
+                        .WithMany()
+                        .HasForeignKey("GfcFeatureId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("GfcEngine.Domain.Entities.Workspace", "Workspace")
+                        .WithMany()
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("AsBuiltDrawing");
+
+                    b.Navigation("AsBuiltFeature");
+
+                    b.Navigation("GfcDrawing");
+
+                    b.Navigation("GfcFeature");
+
+                    b.Navigation("Workspace");
+                });
+
             modelBuilder.Entity("GfcEngine.Domain.Entities.ReferenceLayer", b =>
                 {
                     b.HasOne("GfcEngine.Domain.Entities.Workspace", "Workspace")
@@ -967,13 +1362,44 @@ namespace GfcEngine.Infrastructure.Persistence.Migrations
                     b.Navigation("Workspace");
                 });
 
+            modelBuilder.Entity("GfcEngine.Domain.Entities.ToleranceRule", b =>
+                {
+                    b.HasOne("GfcEngine.Domain.Entities.Workspace", "Workspace")
+                        .WithMany()
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Workspace");
+                });
+
             modelBuilder.Entity("GfcEngine.Domain.Entities.UploadedDrawing", b =>
                 {
+                    b.HasOne("GfcEngine.Domain.Entities.UploadedDrawing", "GfcDrawing")
+                        .WithMany()
+                        .HasForeignKey("GfcDrawingId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("GfcEngine.Domain.Entities.DrawingRevision", "GfcRevision")
+                        .WithMany()
+                        .HasForeignKey("GfcRevisionId");
+
+                    b.HasOne("GfcEngine.Domain.Entities.DrawingStage", "Stage")
+                        .WithMany()
+                        .HasForeignKey("StageId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("GfcEngine.Domain.Entities.Workspace", "Workspace")
                         .WithMany("Drawings")
                         .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("GfcDrawing");
+
+                    b.Navigation("GfcRevision");
+
+                    b.Navigation("Stage");
 
                     b.Navigation("Workspace");
                 });
@@ -1051,6 +1477,11 @@ namespace GfcEngine.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("GfcEngine.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("WorkspaceRoles");
+                });
+
+            modelBuilder.Entity("GfcEngine.Domain.Entities.ComplianceResult", b =>
+                {
+                    b.Navigation("Deviations");
                 });
 
             modelBuilder.Entity("GfcEngine.Domain.Entities.DrawingRevision", b =>
