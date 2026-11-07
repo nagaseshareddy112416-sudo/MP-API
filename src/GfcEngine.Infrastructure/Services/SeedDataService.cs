@@ -197,11 +197,9 @@ public class SeedDataService
         {
             var fields = new List<CategoryFieldConfig>
             {
-                // Road fields
-                new() { WorkspaceId = defaultWorkspace.Id, CategoryName = "Road", FieldName = "ChainageStart", FieldLabel = "Chainage Start (m)", FieldType = "number", IsRequired = false, DisplayOrder = 1 },
-                new() { WorkspaceId = defaultWorkspace.Id, CategoryName = "Road", FieldName = "ChainageEnd", FieldLabel = "Chainage End (m)", FieldType = "number", IsRequired = false, DisplayOrder = 2 },
-                new() { WorkspaceId = defaultWorkspace.Id, CategoryName = "Road", FieldName = "Contractor", FieldLabel = "Contractor", FieldType = "text", IsRequired = false, DisplayOrder = 3 },
-                new() { WorkspaceId = defaultWorkspace.Id, CategoryName = "Road", FieldName = "Consultant", FieldLabel = "Consultant", FieldType = "text", IsRequired = false, DisplayOrder = 4 },
+                // Road fields (chainages are extracted directly from CAD drawings)
+                new() { WorkspaceId = defaultWorkspace.Id, CategoryName = "Road", FieldName = "Contractor", FieldLabel = "Contractor", FieldType = "text", IsRequired = false, DisplayOrder = 1 },
+                new() { WorkspaceId = defaultWorkspace.Id, CategoryName = "Road", FieldName = "Consultant", FieldLabel = "Consultant", FieldType = "text", IsRequired = false, DisplayOrder = 2 },
 
                 // Utility fields
                 new() { WorkspaceId = defaultWorkspace.Id, CategoryName = "Utility", FieldName = "Material", FieldLabel = "Pipe/Cable Material", FieldType = "text", IsRequired = false, DisplayOrder = 1 },

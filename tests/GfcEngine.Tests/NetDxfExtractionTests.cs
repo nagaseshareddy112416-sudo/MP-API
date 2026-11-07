@@ -52,6 +52,10 @@ public class NetDxfExtractionTests
         var testPack = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "gis_test_pack", relativePath);
         if (!File.Exists(testPack))
         {
+            testPack = Path.Combine("d:\\MP\\MP-API\\gis_test_pack", relativePath);
+        }
+        if (!File.Exists(testPack))
+        {
             testPack = Path.Combine("d:\\MP-API\\gis_test_pack", relativePath);
         }
         return Path.GetFullPath(testPack);

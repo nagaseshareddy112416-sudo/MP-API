@@ -61,6 +61,10 @@ public class AcceptanceTestSuite
         var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "gis_test_pack", subFolder, fileName);
         if (!File.Exists(path))
         {
+            path = Path.Combine("d:\\MP\\MP-API\\gis_test_pack", subFolder, fileName);
+        }
+        if (!File.Exists(path))
+        {
             path = Path.Combine("d:\\MP-API\\gis_test_pack", subFolder, fileName);
         }
         return Path.GetFullPath(path);
