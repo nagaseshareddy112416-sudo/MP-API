@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-09 - Phase 3: Drawing & Upload Backend Integration
+### Added
+- Verified spatial pre-check endpoint (`POST /api/workspaces/{id}/drawings/preview`) returning GeoJSON features, display envelope, layer classification, and unmapped layer rejection.
+- Verified drawing deletion (`DELETE /api/workspaces/{id}/drawings/{id}`) with cascade deletion across extracted features, clashes, compliance results, revision history, and physical storage files.
+
 ## [0.3.0] - 2026-11-09 - Phase 2: Design System Integration
 ### Added
 - Maintained backend endpoint readiness and workspace/role DTOs aligning with Phase 2 design system navigation and command palette.
