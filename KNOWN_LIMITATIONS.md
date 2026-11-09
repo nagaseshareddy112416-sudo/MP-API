@@ -13,3 +13,4 @@ The following known limitations and planned enhancements are tracked here:
 
 4. **3D Volumetric Extrusion**:
    - Phase 1 currently processes 2D/3D polylines and footprints. Full 3D mesh generation (IFC/glTF) is scheduled for Phase 7.
+

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-09 - Phase 2: Design System Integration
+### Added
+- Maintained backend endpoint readiness and workspace/role DTOs aligning with Phase 2 design system navigation and command palette.
+
 ## [0.2.0] - 2026-11-09 - Phase 1: Stabilization
 ### Added
 - Multi-stage production `Dockerfile` for ASP.NET Core 8 API.
@@ -24,3 +28,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `dotnet build /warnaserror` passed with 0 warnings and 0 errors.
 - `dotnet test` passed 23 of 23 unit & integration tests (100% pass rate).
 - `dotnet list package --vulnerable` reported zero vulnerable dependencies.
+

@@ -15,3 +15,4 @@ This document tracks assumptions made in the architecture and implementation of 
 ## 3. Background Processing & Scalability
 - **Hangfire**: Async drawing ingestion, geometry extraction, and clash detection are executed via Hangfire background jobs backed by SQL Server storage.
 - **File Storage**: Drawing originals (DXF, DWG, PDF, IFC, etc.) are preserved byte-for-byte in configured local/cloud storage; extraction reads from the stored file without modifying it.
+
