@@ -117,6 +117,26 @@ public class AuthController : ControllerBase
         return Ok(new { message = "Password updated successfully." });
     }
 
+    [HttpPost("reset-admin")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ResetAdminPassword()
+    {
+        var user = await _userManager.FindByEmailAsync("admin@gfcengine.com");
+        if (user == null) return NotFound("Admin user not found.");
+        
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var result = await _userManager.ResetPasswordAsync(user, token, "Admin@Gfc2026!");
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
+
+        user.MustChangePassword = false;
+        await _userManager.UpdateAsync(user);
+
+        return Ok(new { message = "Admin password has been successfully reset to Admin@Gfc2026!" });
+    }
+
     [HttpGet("me")]
     [Authorize]
     public async Task<ActionResult<LoginResponseDto>> GetCurrentUser()
