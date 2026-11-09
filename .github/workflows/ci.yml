@@ -1,0 +1,31 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore GfcEngine.sln
+
+    - name: Build solution (Warnings as Errors)
+      run: dotnet build GfcEngine.sln --no-restore -c Release /warnaserror
+
+    - name: Run unit & integration tests
+      run: dotnet test GfcEngine.sln --no-build -c Release --verbosity normal
+
+    - name: Vulnerability scan
+      run: dotnet list package --vulnerable --include-transitive

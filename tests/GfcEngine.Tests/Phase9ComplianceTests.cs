@@ -367,6 +367,6 @@ public class Phase9ComplianceTests
         var dtos = okRes!.Value as List<ComplianceResultDto>;
         dtos.Should().NotBeNull();
         dtos!.All(d => d.HasNonSurveyWarning).Should().BeTrue();
-        dtos.First().SourceOfCoordinates.Should().Be(CoordinateSource.Redrawn);
+        dtos!.First().SourceOfCoordinates.Should().Be(CoordinateSource.Redrawn);
     }
 }

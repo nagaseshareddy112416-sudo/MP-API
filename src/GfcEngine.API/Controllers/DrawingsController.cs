@@ -250,7 +250,7 @@ public class DrawingsController : ControllerBase
             drawing.ProcessingStatus = ext == ".dxf" ? "Queued" : "Completed";
             drawing.ProcessingError = null;
             drawing.StageId = request.StageId;
-            drawing.StageName = request.StageName;
+            drawing.StageName = request.StageName ?? "";
             drawing.SourceOfCoordinates = request.SourceOfCoordinates ?? CoordinateSource.Survey;
             drawing.GfcDrawingId = request.GfcDrawingId;
 
@@ -296,7 +296,7 @@ public class DrawingsController : ControllerBase
                 CreatedBy = user,
                 CreatedAt = DateTime.UtcNow,
                 StageId = request.StageId,
-                StageName = request.StageName,
+                StageName = request.StageName ?? "",
                 SourceOfCoordinates = request.SourceOfCoordinates ?? CoordinateSource.Survey,
                 GfcDrawingId = request.GfcDrawingId
             };
