@@ -28,6 +28,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<FeatureMatch> FeatureMatches => Set<FeatureMatch>();
     public DbSet<ComplianceResult> ComplianceResults => Set<ComplianceResult>();
     public DbSet<Deviation> Deviations => Set<Deviation>();
+    public DbSet<DesignModel> DesignModels => Set<DesignModel>();
+    public DbSet<DrapedRender> DrapedRenders => Set<DrapedRender>();
+    public DbSet<PlantLibraryItem> PlantLibraryItems => Set<PlantLibraryItem>();
+    public DbSet<SiteLandscapeLayer> SiteLandscapeLayers => Set<SiteLandscapeLayer>();
+    public DbSet<ElevationPerspectiveImage> ElevationPerspectiveImages => Set<ElevationPerspectiveImage>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -328,6 +333,88 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
                 .WithMany()
                 .HasForeignKey(d => d.WorkspaceId)
                 .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        // DesignModel
+        builder.Entity<DesignModel>(b =>
+        {
+            b.HasKey(m => m.Id);
+            b.Property(m => m.ModelName).IsRequired().HasMaxLength(200);
+            b.Property(m => m.OriginalFileName).IsRequired().HasMaxLength(255);
+            b.Property(m => m.StoragePath).IsRequired().HasMaxLength(500);
+            b.Property(m => m.OptimizedStoragePath).HasMaxLength(500);
+            b.Property(m => m.FileType).IsRequired().HasMaxLength(20);
+            b.Property(m => m.DetectedUnit).HasMaxLength(10);
+            b.Property(m => m.ValidationStatus).HasMaxLength(50);
+            b.HasOne(m => m.Workspace)
+                .WithMany()
+                .HasForeignKey(m => m.WorkspaceId)
+                .OnDelete(DeleteBehavior.Cascade);
+            b.HasOne(m => m.Drawing)
+                .WithMany()
+                .HasForeignKey(m => m.DrawingId)
+                .OnDelete(DeleteBehavior.SetNull);
+            b.HasIndex(m => new { m.WorkspaceId, m.DrawingId });
+        });
+
+        // DrapedRender
+        builder.Entity<DrapedRender>(b =>
+        {
+            b.HasKey(r => r.Id);
+            b.Property(r => r.Title).IsRequired().HasMaxLength(200);
+            b.Property(r => r.OriginalFileName).IsRequired().HasMaxLength(255);
+            b.Property(r => r.StoragePath).IsRequired().HasMaxLength(500);
+            b.HasOne(r => r.Workspace)
+                .WithMany()
+                .HasForeignKey(r => r.WorkspaceId)
+                .OnDelete(DeleteBehavior.Cascade);
+            b.HasOne(r => r.Drawing)
+                .WithMany()
+                .HasForeignKey(r => r.DrawingId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // PlantLibraryItem
+        builder.Entity<PlantLibraryItem>(b =>
+        {
+            b.HasKey(p => p.Id);
+            b.Property(p => p.CadBlockName).IsRequired().HasMaxLength(100);
+            b.Property(p => p.CommonName).IsRequired().HasMaxLength(200);
+            b.Property(p => p.ModelType).IsRequired().HasMaxLength(50);
+            b.Property(p => p.LicenseName).HasMaxLength(100);
+            b.Property(p => p.LicenseSource).HasMaxLength(200);
+            b.HasOne(p => p.Workspace)
+                .WithMany()
+                .HasForeignKey(p => p.WorkspaceId)
+                .OnDelete(DeleteBehavior.Cascade);
+            b.HasIndex(p => new { p.WorkspaceId, p.CadBlockName });
+        });
+
+        // SiteLandscapeLayer
+        builder.Entity<SiteLandscapeLayer>(b =>
+        {
+            b.HasKey(l => l.Id);
+            b.Property(l => l.CadLayer).IsRequired().HasMaxLength(100);
+            b.Property(l => l.SurfaceType).IsRequired().HasMaxLength(100);
+            b.Property(l => l.TextureName).HasMaxLength(100);
+            b.Property(l => l.ColorHex).HasMaxLength(20);
+            b.HasOne(l => l.Workspace)
+                .WithMany()
+                .HasForeignKey(l => l.WorkspaceId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ElevationPerspectiveImage
+        builder.Entity<ElevationPerspectiveImage>(b =>
+        {
+            b.HasKey(e => e.Id);
+            b.Property(e => e.Title).IsRequired().HasMaxLength(200);
+            b.Property(e => e.ImageType).IsRequired().HasMaxLength(50);
+            b.Property(e => e.StoragePath).IsRequired().HasMaxLength(500);
+            b.HasOne(e => e.Workspace)
+                .WithMany()
+                .HasForeignKey(e => e.WorkspaceId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

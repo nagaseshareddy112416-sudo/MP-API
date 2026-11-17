@@ -21,6 +21,11 @@ public interface IApplicationDbContext
     DbSet<FeatureMatch> FeatureMatches { get; }
     DbSet<ComplianceResult> ComplianceResults { get; }
     DbSet<Deviation> Deviations { get; }
+    DbSet<DesignModel> DesignModels { get; }
+    DbSet<DrapedRender> DrapedRenders { get; }
+    DbSet<PlantLibraryItem> PlantLibraryItems { get; }
+    DbSet<SiteLandscapeLayer> SiteLandscapeLayers { get; }
+    DbSet<ElevationPerspectiveImage> ElevationPerspectiveImages { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -99,6 +99,7 @@ builder.Services.AddScoped<IClashDetectionService, ClashDetectionService>();
 builder.Services.AddScoped<IReferenceLayerService, ReferenceLayerService>();
 builder.Services.AddScoped<IFeatureMatchingService, FeatureMatchingService>();
 builder.Services.AddScoped<IComplianceEngineService, ComplianceEngineService>();
+builder.Services.AddScoped<IDesignIntentService, DesignIntentService>();
 builder.Services.AddScoped<HangfireDxfProcessingJob>();
 builder.Services.AddScoped<SeedDataService>();
 
